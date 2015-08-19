@@ -1,0 +1,22 @@
+data
+Object {
+	ID: 0
+	Title: ""
+	SubTitle: ""
+	Blog: ""
+	CanDelete: 0
+	CanPublish: 0
+	CanUnpublish: 0
+	Categories: Array[0]
+	CreateDate: ""
+	ModifiedDate: ""
+	PageName: ""
+	PostFolder: "../../blogs/blogs/"
+	PostUrl: "http://barraud-w7-1/peterbarraud/blogs/blogs/"
+	PublishDate: ""
+	ReadyForPublish: false
+	TemplateFolder: "../templates/"
+	TemplateName: "blog_post.html"
+	Types: Array[0]
+	UnpublishDate: ""
+	

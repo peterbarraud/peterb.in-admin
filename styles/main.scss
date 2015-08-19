@@ -1,0 +1,260 @@
+@import "compass/css3";
+@import "compass/utilities";
+
+
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+$icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+
+// bower:scss
+@import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
+// endbower
+
+//to place body after navbar (http://getbootstrap.com/components/#navbar-fixed-top)
+body {
+  padding-top: 50px;
+}
+.main {
+  padding: 0.75em;
+}
+.tagheader {
+  border-bottom-style:solid;
+  border-bottom-width:1px;
+  border-bottom-color:#ebebeb;
+  padding-bottom:2px;
+
+}
+.headertag {
+  border-style:solid;
+  border-width:1px;
+  border-color:#ebebeb;
+  border-radius: 3px;
+  margin:5px;
+  padding-top:2px;
+  padding-right:5px;
+  padding-bottom:1px;
+  padding-left:5px;
+}
+//to ensure that the event pod contents stays fixed on the screen, ensure that the div does not scroll or word-wrap
+.eventPod {
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  white-space: nowrap;
+}
+//TODO: need to make the following even and odd definitions scss-compliant
+
+.treenodeeven {
+  cursor:default;
+  background:#f7f7f6;
+  padding-left:5px;
+}
+.treenodeodd {
+  cursor:default;
+  outline:none;
+  background:#ffffff;
+  padding-left:5px;
+}
+.treenodefocus {
+  background:#93c2d0;
+  //TODO: bring back this color. right now, using above just so it's easy to see
+  //background:#e9f6fa;
+  outline:none;
+  border-left-style:soild;
+  border-left-color:black;
+  border-left-width:10px;
+}
+
+$bgDefault      : #9a7855;
+$bgHighlight    : #c0392b;
+$colDefault     : #fffffe;
+$colHover       : #ffbbbc;
+$colHighlight   : #fffffe;
+.navbar-default {
+  background-color: $bgDefault;
+  border-color: $bgHighlight;
+  .navbar-brand {
+    color: $colDefault;
+    &:hover, &:focus {
+      color: $colHighlight; }}
+  .navbar-text {
+    color: $colDefault; }
+  .navbar-nav {
+    > li {
+      > a {
+        color: $colDefault;
+        &:hover,  &:focus {
+          color: $colHighlight; }}}
+    > .active {
+      > a, > a:hover, > a:focus {
+        color: $colHighlight;
+        background-color: $bgHighlight; }}
+    > .open {
+      > a, > a:hover, > a:focus {
+        color: $colHighlight;
+        background-color: $bgHighlight; }}}
+  .navbar-toggle {
+    border-color: $bgHighlight;
+    &:hover, &:focus {
+      background-color: $bgHighlight; }
+    .icon-bar {
+      background-color: $colDefault; }}
+  .navbar-collapse,
+  .navbar-form {
+    border-color: $colDefault; }
+  .navbar-link {
+    color: $colDefault;
+    &:hover {
+      color: $colHighlight; }}}
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu {
+    > li > a {
+      color: $colDefault;
+      &:hover, &:focus {
+        color: $colHighlight; }}
+    > .active {
+      > a, > a:hover, > a:focus, {
+        color: $colHighlight;
+        background-color: $bgHighlight; }}}
+}
+
+// TODO This is so hacky
+.right {
+  text-align: right;
+}
+
+
+label {
+  font-weight: 400;
+  color: #999;
+}
+
+/*
+   abn-tree.css
+
+   style for the angular-bootstrap-nav-tree
+   for both Bootstrap 2 and Bootstrap 3
+
+*/
+
+
+
+/* ------------------------------------------
+AngularJS Animations...
+
+The first selector is for Angular 1.1.5
+The second selector is for Angular 1.2.0
+
+*/
+.abn-tree-animate-enter,
+li.abn-tree-row.ng-enter {
+  transition: 200ms linear all;
+  position: relative;
+  display: block;
+  opacity: 0;
+  max-height:0px;
+}
+.abn-tree-animate-enter.abn-tree-animate-enter-active,
+li.abn-tree-row.ng-enter-active{
+  opacity: 1;
+  max-height:30px;
+}
+
+.abn-tree-animate-leave,
+li.abn-tree-row.ng-leave {
+  transition: 200ms linear all;
+  position: relative;
+  display: block;
+  height:30px;
+  max-height: 30px;
+  opacity: 1;
+}
+.abn-tree-animate-leave.abn-tree-animate-leave-active,
+li.abn-tree-row.ng-leave-active {
+  height: 0px;
+  max-height:0px;
+  opacity: 0;
+}
+
+
+/*
+------------------------------------------
+Angular 1.2.0 Animation
+*/
+
+
+.abn-tree-animate.ng-enter{
+
+}
+.abn-tree-animate.ng-enter{
+
+}
+
+
+
+
+/*
+   end animation stuff
+-----------------------------------------
+   begin normal css stuff
+*/
+ul.abn-tree li.abn-tree-row {
+  padding: 0px;
+  margin:0px;
+}
+
+ul.abn-tree li.abn-tree-row a {
+  padding: 3px 10px;
+}
+
+ul.abn-tree i.indented {
+  padding: 2px;
+}
+
+.abn-tree {
+  cursor: pointer;
+}
+ul.nav.abn-tree .level-1 .indented {
+  position: relative;
+  left: 0px;
+}
+ul.nav.abn-tree .level-2 .indented {
+  position: relative;
+  left: 20px;
+}
+ul.nav.abn-tree .level-3 .indented {
+  position: relative;
+  left: 40px;
+}
+ul.nav.abn-tree .level-4 .indented {
+  position: relative;
+  left: 60px;
+}
+ul.nav.abn-tree .level-5 .indented {
+  position: relative;
+  left: 80px;
+}
+ul.nav.abn-tree .level-6 .indented {
+  position: relative;
+  left: 100px;
+}
+ul.nav.nav-list.abn-tree .level-7 .indented {
+  position: relative;
+  left: 120px;
+}
+ul.nav.nav-list.abn-tree .level-8 .indented {
+  position: relative;
+  left: 140px;
+}
+ul.nav.nav-list.abn-tree .level-9 .indented {
+  position: relative;
+  left: 160px;
+}
+

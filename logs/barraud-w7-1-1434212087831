@@ -1,0 +1,2 @@
+data
+Object {ID: 0, Title: "", SubTitle: "", PageName: "", Blog: ""…}Blog: ""CanDelete: 0CanPublish: 0CanUnpublish: 0Categories: Array[0]CreateDate: ""ID: 0ModifiedDate: ""PageName: ""PostFolder: "../../blogs/blogs/"PostUrl: "http://barraud-w7-1/peterbarraud/blogs/blogs/"PublishDate: ""ReadyForPublish: falseSubTitle: ""TemplateFolder: "../templates/"TemplateName: "blog_post.html"Title: ""Types: Array[0]UnpublishDate: ""__proto__: Object
