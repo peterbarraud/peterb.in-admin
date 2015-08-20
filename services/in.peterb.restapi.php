@@ -20,9 +20,31 @@
 		$classAttrs = array();
 		$classAttrs['password'] = 'john';
 		$user = $app->GetObjectsByClassNameAndAttributes('appuser',$classAttrs);
+		//echo $user->Length . "\n";
 		$ret_val['okso'] = $user->Length;
 		//cors();
-		echo json_encode($ret_val);	
+		//echo json_encode($ret_val);	
+	});
+	$app->get('/validateuser/:username/:password',function($username,$password) {
+		require_once 'dataobjectserver/application.php';
+		$app = Application::getinstance();
+		$classAttrs = array();
+		$logger = new logger();
+		$classAttrs['password'] = $password;
+		$classAttrs['username'] = $username;
+		$logger->WriteLine($password);
+		$logger->WriteLine($username);
+		$user = $app->GetObjectsByClassNameAndAttributes('appuser',$classAttrs);
+		$ret_val = array();
+		if ($user->Length == 1) {
+			$ret_val['success'] = 1;
+			$ret_val['error'] = '';
+		}
+		else {
+			$ret_val['success'] = 0;
+			$ret_val['error'] = 'Invalid user name and / or password.';
+		}
+		echo json_encode($ret_val);
 	});
 	
 	$app->get('/gettypelist/',function(){

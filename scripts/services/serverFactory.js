@@ -14,16 +14,22 @@ angular.module('peterbdotin')
   .factory('serverFactory', function ($http,util) {
 	//private method
     return {
-      checkusercredentials: function(email,password) {
-        //hardwired for now
-        var retval = false;
-        if (email === "gapeterb@gmail.com" && password === "danielb07") {
-          retval = true;
-        }
-        return retval;
+      checkusercredentials: function(scope,location) {
+        $http.get('services/in.peterb.restapi.php/validateuser/' + scope.email + '/' + scope.password).
+          success(function(data, status, headers, config) {
+			  if (data.success) {
+				  location.path( "/blogitem" );
+			  }
+			  else {
+				  scope.invalid_user_cred = data.error;
+			  }
+          }).
+          error(function(data, status, headers, config) {
+			  scope.invalid_user_cred = data.error;
+          });        
       },
       getblogdetails : function(blogId,scope) {
-        $http.get('services/pbrest.php/getpost/' + blogId).
+        $http.get('services/in.peterb.restapi.php/getpost/' + blogId).
           success(function(data, status, headers, config) {
             scope.blogDetails = data;
             scope.blogDetails_Backup = angular.copy(data);  //use this deep copy in a speccial case when a user cancels out all changes
@@ -66,15 +72,6 @@ angular.module('peterbdotin')
       },
       
       getcategorylist : function(scope) {
-        $http.get('services/pbrest.php/getcategorylist').
-          success(function(data, status, headers, config) {
-            scope.categoryList = data;
-          }).
-          error(function(data, status, headers, config) {
-            console.log(data);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-          });        
       },
 
       gettypelist : function(scope) {

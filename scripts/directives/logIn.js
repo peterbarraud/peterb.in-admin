@@ -15,14 +15,7 @@ angular.module('peterbdotin')
       link: function postLink(scope,element, attrs) {
         scope.$parent.validUser = false;
         scope.checkusercredentials = function () {
-          scope.$parent.validUser = serverFactory.checkusercredentials(scope.email,scope.password);
-          if (scope.$parent.validUser) {
-            //console.log(attrs.redirectTo); need to get the redirect from the login attributes. not sure why it's not happening now??
-            $location.path( "/blogitem" );
-          }
-          else {
-            scope.invalid_user_cred = 'Invalid username or password';
-          }
+          serverFactory.checkusercredentials(scope,$location);
         }
         scope.displayErrorMsg = function(){
           return util.isEmptyString(scope.invalid_user_cred) === false;
