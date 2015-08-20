@@ -24,6 +24,23 @@
 		//cors();
 		echo json_encode($ret_val);	
 	});
+	
+	$app->get('/gettypelist/',function(){
+		require_once 'dataobjectserver/application.php';
+		$app = Application::getinstance();
+		$blogtypes = $app->GetObjectsByClassName('blogtype');
+		echo json_encode($blogtypes);
+	});
+	
+	$app->get('/getcategorylist/',function () {
+		require_once 'dataobjectserver/application.php';
+		$app = Application::getinstance();
+		$blogcategories = $app->GetObjectsByClassName('blogcategory');
+		echo json_encode($blogcategories);
+	});
+	
+	
+	
 	$app->run();
 
 

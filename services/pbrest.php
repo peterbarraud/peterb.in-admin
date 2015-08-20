@@ -30,7 +30,7 @@
 
 
 	//TODO
-	$app->get('/getblogtypelist',function(){
+	$app->get('/getblogtypelist/',function(){
 		require_once 'common/dbconnection.php';
 		$GLOBALS['mysqli'] = MySQLConnection::Open();
 		require_once 'posttype.php';
