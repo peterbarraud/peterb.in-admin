@@ -1,4 +1,0 @@
-SQL Error:
-SELECT * from pbcategory
-SQL Error:
-SELECT ty.id,ty.name,ty.icon from pbtype ty

@@ -3,6 +3,6 @@
     <h3 class="panel-title">{{attrs.listtitle}}</h3>
   </div>
   <div class="panel-body">
-    <div class="checkbox" ng-repeat="blogType in typeList"><label><input ng-disabled="mode !== 'edit'" type="checkbox"ng-model="selectedTypes.ids[blogType.ID]"> {{blogType.Name}}</label></div>
+    <div class="checkbox" ng-repeat="blogType in typeList"><label><input ng-disabled="mode !== 'edit'" type="checkbox"ng-model="selectedTypes.ids[blogType.id]"> {{blogType.name}}</label></div>
   </div>
 </div>

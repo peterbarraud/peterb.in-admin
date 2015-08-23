@@ -18,9 +18,11 @@ angular.module('peterbdotin')
         $http.get('services/in.peterb.restapi.php/validateuser/' + scope.email + '/' + scope.password).
           success(function(data, status, headers, config) {
 			  if (data.success) {
+				  scope.$parent.validUser = true;
 				  location.path( "/blogitem" );
 			  }
 			  else {
+				  scope.$parent.validUser = false;
 				  scope.invalid_user_cred = data.error;
 			  }
           }).
@@ -31,34 +33,33 @@ angular.module('peterbdotin')
       getblogdetails : function(blogId,scope) {
         $http.get('services/in.peterb.restapi.php/getpost/' + blogId).
           success(function(data, status, headers, config) {
-            scope.blogDetails = data;
-            scope.blogDetails_Backup = angular.copy(data);  //use this deep copy in a speccial case when a user cancels out all changes
-            //now a HACK to manage ckeditor
-            //default the blog to a p tag if ID = 0 (new blog)
-            if (scope.blogDetails.ID === 0) {
-              scope.blogDetails.Blog = "<p></p>";
-            }
-            //SELECTED CATEGORIES
-            //now lets add the blog categories to the selected categories object array
-            scope.selectedCategories = {ids: {}}; //clear out the current selected categories
-            data.Categories.forEach (function(category) {
-              scope.selectedCategories.ids[category.ID] = true;
-            });
-            //SELECTED TYPES
-            //now lets add the blog types to the selected types object array
-            scope.selectedTypes = {ids: {}}; //clear out the current selected types
-            data.Types.forEach (function(blogType) {
-              scope.selectedTypes.ids[blogType.ID] = true;
-            });
+			scope.blogDetails = data;
+			console.log(scope.blogDetails);
+			//now a HACK to manage ckeditor
+			//default the blog to a p tag if id = 0 (new blog)
+			if (scope.blogDetails.id === 0) {
+			  scope.blogDetails.blog = "<p></p>";
+			}
+			//SELECTED CATEGORIES
+			//now lets add the blog categories to the selected categories object array
+			scope.selectedCategories = {ids: {}}; //clear out the current selected categories
+			scope.blogDetails.blogcategory.forEach (function(category) {
+			  scope.selectedCategories.ids[category.id] = true;
+			});
+			//SELECTED TYPES
+			//now lets add the blog types to the selected types object array
+			scope.selectedTypes = {ids: {}}; //clear out the current selected categories
+			scope.blogDetails.blogtype.forEach (function(blogType) {
+			  scope.selectedTypes.ids[blogType.id] = true;
+			});
           }).
           error(function(data, status, headers, config) {
             console.log(data);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
           });        
       },
       
       getallblogs : function(scope) {
+		  /*
         $http.get('services/pbrest.php/getallposts').
           success(function(data, status, headers, config) {
             scope.bloglist = data;
@@ -69,16 +70,27 @@ angular.module('peterbdotin')
             // called asynchronously if an error occurs
             // or server returns response with an error status.
           });        
+          * */
       },
       
       getcategorylist : function(scope) {
+        $http.get('services/in.peterb.restapi.php/gettypelist/').
+          success(function(data, status, headers, config) {
+            scope.typeList = data.Items;
+            //console.log(data.Items[0].name);
+          }).
+          error(function(data, status, headers, config) {
+            console.log(data);
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+          });        
       },
 
       gettypelist : function(scope) {
-        $http.get('services/pbrest.php/getblogtypelist').
+        $http.get('services/in.peterb.restapi.php/getcategorylist/').
           success(function(data, status, headers, config) {
-            scope.typeList = data;
-            console.log(data);
+            scope.categoryList = data.Items;
+            //console.log(data.Items[0].name);
           }).
           error(function(data, status, headers, config) {
             console.log(data);
@@ -108,11 +120,13 @@ angular.module('peterbdotin')
         httpPostParams = httpPostParams.join('&');
         $http({
           method: 'POST',
-          url: 'services/pbrest.php/savepost',
+          url: 'services/in.peterb.restapi.php/savepost',
           data: httpPostParams,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).
         success(function(data, status, headers, config) {
+			console.log(data.savedblogid);
+			
           //if all is good, then let's clean up
           scope.BlogIsDirty = false;
           scope.showdirtyalert = false;

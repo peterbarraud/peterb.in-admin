@@ -9,23 +9,23 @@
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       {{ServerResponse.Message}}
     </div>
+    <!--blog form -->
     <form name="frm">
       <div class="form-group">
-        <label for="exampleInputEmail1">Title</label>
-        <input type="text" ng-model='blogDetails.Title' class="form-control" id="Title" placeholder="Blog title">
+        <label for="Title">Title</label>
+        <input type="text" ng-model='blogDetails.title' class="form-control" id="Title" placeholder="Blog title">
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword1">Sub-title</label>
-        <textarea class="form-control" rows="3" placeholder='Sub title'  ng-model='blogDetails.SubTitle'></textarea>
+        <label for="subtitle">Sub-title</label>
+        <textarea class="form-control" rows="3" placeholder='Sub title' id='subtitle' ng-model='blogDetails.subtitle'></textarea>
       </div>
       <div class="form-group">
         <div class=row>
           <div class=col-md-9>
-            <label for="exampleInputPassword1">Blog</label>
+            <label for="editor">Blog</label>
             <div ng-cloak ng-hide="ckeditorIsReady" class="highlight">Initialising ...</div>
-
             <div>
-              <textarea ckeditor="editorOptions" name="editor" ng-model="blogDetails.Blog"></textarea>
+              <textarea ckeditor="editorOptions" name="editor" ng-model="blogDetails.blog"></textarea>
             </div>
           </div>
           <div class=col-md-3>
@@ -35,7 +35,7 @@
                   <h3 class="panel-title">Categories</h3>
                 </div>
                 <div class="panel-body">
-                  <div class="checkbox" ng-click='checkListIem(category.ID)' ng-repeat="category in categoryList"><label><input type="checkbox"ng-model="selectedCategories.ids[category.ID]"> {{category.Title}}</label></div>
+                  <div class="checkbox" ng-click='checkListIem(category.id)' ng-repeat="category in categoryList"><label><input type="checkbox"ng-model="selectedCategories.ids[category.id]"> {{category.title}}</label></div>
                 </div>
               </div>
             </div>
@@ -45,14 +45,15 @@
                   <h3 class="panel-title">Blog types</h3>
                 </div>
                 <div class="panel-body">
-                  <div class="checkbox" ng-click='checkListIem(blogType.ID)' ng-repeat="blogType in typeList"><label><input type="checkbox"ng-model="selectedTypes.ids[blogType.ID]"> {{blogType.Name}}</label></div>
+                  <div class="checkbox" ng-click='checkListIem(blogType.id)' ng-repeat="blogType in typeList"><label><input type="checkbox"ng-model="selectedTypes.ids[blogType.id]"> {{blogType.name}}</label></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </form>
+    </form>    
+    <!--blog form -->
     <div class="alert alert-danger alert-dismissible fade in" role="alert" ng-show='showdirtyalert'>
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
           <h4 id="oh-snap!-you-got-an-error!">Oh snap! You've got unsaved changes in this blog!<a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a></h4>

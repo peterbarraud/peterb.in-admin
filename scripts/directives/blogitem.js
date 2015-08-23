@@ -61,29 +61,29 @@ angular.module('peterbdotin')
             scope.BlogIsDirty = true;
           }
           scope.save = function() {
-            if (!util.isEmptyString(scope.blogDetails.Title)) { //you'll need at least a title to save a blog
+            if (!util.isEmptyString(scope.blogDetails.title)) { //you'll need at least a title to save a blog
               //CATEGORIES
               //clear the current blog categories list
-              scope.blogDetails.Categories = [];
-              //iterate the list of selected categories and add them to the blogDetails object Categories array
+              scope.blogDetails.blogcategory = [];
+              //iterate the list of selected categories and add them to the blogDetails object category array
               angular.forEach (scope.selectedCategories.ids, function(isaddcategory,selectedCategoryID){
                 if (isaddcategory) {
                   scope.categoryList.forEach (function (category) {
-                    if (category.ID === selectedCategoryID) {
-                      scope.blogDetails.Categories.push(category);
+                    if (category.id === selectedCategoryID) {
+                      scope.blogDetails.blogcategory.push(category);
                     }
                   });
                 }
               });
               //TYPES
-              //clear the current blog categories list
-              scope.blogDetails.Types = [];
-              //iterate the list of selected categories and add them to the blogDetails object Categories array
+              //clear the current blog type list
+              scope.blogDetails.blogtype = [];
+              //iterate the list of selected categories and add them to the blogDetails object blogtype array
               angular.forEach (scope.selectedTypes.ids, function(isaddtype,selectedTypeID){
                 if (isaddtype) {
                   scope.typeList.forEach (function (blogType) {
-                    if (blogType.ID === selectedTypeID) {
-                      scope.blogDetails.Types.push(blogType);
+                    if (blogType.id === selectedTypeID) {
+                      scope.blogDetails.blogtype.push(blogType);
                     }
                   });
                 }
@@ -105,15 +105,15 @@ angular.module('peterbdotin')
               //so only test the watcher as long as the id has not changed
             if (scope.ckeditorIsReady) {
               if (!angular.isUndefined(old_blogDetails) && !angular.isUndefined(new_blogDetails)) {
-                if (!angular.isUndefined(old_blogDetails.ID) && !angular.isUndefined(new_blogDetails.ID)) {
-                  if (old_blogDetails.ID === new_blogDetails.ID) {  //means we havent changed the blog being view but something else has changed
+                if (!angular.isUndefined(old_blogDetails.id) && !angular.isUndefined(new_blogDetails.id)) {
+                  if (old_blogDetails.id === new_blogDetails.id) {  //means we havent changed the blog being view but something else has changed
                     if (scope.frm.editor.$dirty) {
                       scope.BlogIsDirty = true;
                     }
-                    else if (old_blogDetails.Title !== new_blogDetails.Title) {
+                    else if (old_blogDetails.title !== new_blogDetails.title) {
                       scope.BlogIsDirty = true;
                     }
-                    else if (old_blogDetails.SubTitle !== new_blogDetails.SubTitle) {
+                    else if (old_blogDetails.subtitle !== new_blogDetails.subtitle) {
                       scope.BlogIsDirty = true;
                     }
                   }

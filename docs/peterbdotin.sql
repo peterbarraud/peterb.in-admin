@@ -9,7 +9,7 @@
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
+SET FOREIGN_KEY_CHECKS=0;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,11 +25,13 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `appuser`
 --
-
+drop table if exists `appuser`;
 CREATE TABLE IF NOT EXISTS `appuser` (
   `id` tinyint NOT NULL AUTO_INCREMENT,
   `username` varchar(10) NOT NULL,
   `password` varchar(10) NOT NULL,
+  `createdate` timestamp default '0000-00-00 00:00:00',
+  `modifieddate` timestamp default now() on update now(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -38,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `appuser` (
 --
 -- Table structure for table `blogcategory`
 --
-
+drop TABLE IF  EXISTS `blogcategory` ;
 CREATE TABLE IF NOT EXISTS `blogcategory` (
   `id` tinyint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -51,6 +53,8 @@ CREATE TABLE IF NOT EXISTS `blogcategory` (
   `backgroundtitlecolor` varchar(256) NOT NULL,
   `carouseltitle` varchar(256) NOT NULL,
   `carouselsubtitle` varchar(256) NOT NULL,
+  `createdate` timestamp default '0000-00-00 00:00:00',
+  `modifieddate` timestamp default now() on update now(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -59,18 +63,13 @@ CREATE TABLE IF NOT EXISTS `blogcategory` (
 -- Dumping data for table `blogcategory`
 --
 
-INSERT INTO `blogcategory` (`id`, `name`, `description`, `color`, `postfolder`, `url`, `title`, `backgroundtitle`, `backgroundtitlecolor`, `carouseltitle`, `carouselsubtitle`) VALUES
-(1, 'Regex', 'Regular Expressions', '#e40177', '../../blogs/regex/', 'http://barraud-w7-1/peterbarraud/blogs/regex/', 'Regular Expressions', 'Regular Expressions', '#5a5a5a', 'Regular Expressions', 'Scripting will never be done without Regular Expressions. We''ll cover examples using Perl (the top of the class), we''ll also use FrameMaker''s own Regular Expression search and replace with examples.'),
-(2, 'ExtendScript', 'ExtendScript for FrameMaker', '#9f5700', '../../blogs/estk/', 'http://barraud-w7-1/peterbarraud/blogs/estk/', 'ExtendScript for FrameMaker', 'ExtendScript for FrameMaker', '#5a5a5a', 'ExtendScript for FrameMaker', 'Automate a whole lot of what you do in FrameMaker. The blog covers all sorts of examples (including the source and executables). Look and learn from the source. Or simply use the executables.'),
-(3, 'Perl', 'Scripting in Perl', '#004065', '../../blogs/perl/', 'http://barraud-w7-1/peterbarraud/blogs/perl/', 'Scripting in Perl', 'Scripting in Perl', '#5a5a5a', 'Scripting in Perl', 'Though you do loads of stuff with Perl. In my blog, I''m going to talk mostly about doing stuff with text. We''ll do stuff like reading from a file, or maybe even updating the contents of a file.'),
-(4, 'FrameMaker', 'Adobe FrameMaker', '#9f5700', '../../blogs/fm/', 'http://barraud-w7-1/peterbarraud/blogs/fm/', 'Authoring in FrameMaker', 'Authoring in FrameMaker', '#5a5a5a', 'Authoring in FrameMaker', 'So FrameMaker is what author in and author for at Adobe. And that''s what we''re going to do here. I''ll try to add videos to show you how to get started with some things like say Structure author or DITA');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `appconfig`
 --
 
+drop TABLE IF EXISTS `appconfig` ;
 CREATE TABLE IF NOT EXISTS `appconfig` (
   `id` tinyint NOT NULL AUTO_INCREMENT,
   `templatefolder` varchar(256) NOT NULL,
@@ -83,6 +82,8 @@ CREATE TABLE IF NOT EXISTS `appconfig` (
   `indexfilename` varchar(256) NOT NULL,
   `lightcarousel` varchar(500) NOT NULL,
   `darkcarousel` varchar(500) NOT NULL,
+  `createdate` timestamp default '0000-00-00 00:00:00',
+  `modifieddate` timestamp default now() on update now(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -90,8 +91,6 @@ CREATE TABLE IF NOT EXISTS `appconfig` (
 -- Dumping data for table `appconfig`
 --
 
-INSERT INTO `appconfig` (`id`, `templatefolder`, `posttemplatename`, `postfolder`, `posturl`, `categorytemplatename`, `indextemplatename`, `indexfolder`, `indexfilename`, `lightcarousel`, `darkcarousel`) VALUES
-(1, '../templates/', 'blog_post.html', '../../blogs/blogs/', 'http://barraud-w7-1/peterbarraud/blogs/blogs/', 'category_index.html', 'peterbarraud_index.html', '../../', 'index.html', 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTAwIj48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzY2NiI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQ1MCIgeT0iMjUwIiBzdHlsZT0iZmlsbDojNmE2YTZhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjU2cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+U2Vjb25kIHNsaWRlPC90ZXh0Pjwvc3ZnPg==', 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTAwIj48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzU1NSI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQ1MCIgeT0iMjUwIiBzdHlsZT0iZmlsbDojNWE1YTVhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjU2cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+VGhpcmQgc2xpZGU8L3RleHQ+PC9zdmc+');
 
 -- --------------------------------------------------------
 
@@ -99,6 +98,7 @@ INSERT INTO `appconfig` (`id`, `templatefolder`, `posttemplatename`, `postfolder
 -- Table structure for table `blog`
 --
 
+drop TABLE IF EXISTS `blog` ;
 CREATE TABLE IF NOT EXISTS `blog` (
   `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(1000) NOT NULL,
@@ -106,10 +106,10 @@ CREATE TABLE IF NOT EXISTS `blog` (
   `pagename` varchar(1024) DEFAULT NULL,
   `blog` text,
   `readyforpublish` char(0) DEFAULT NULL,
-  `createdate` datetime NOT NULL,
-  `modifieddate` datetime DEFAULT NULL,
   `publishdate` datetime DEFAULT NULL,
   `unpublishdate` datetime DEFAULT NULL,
+  `createdate` timestamp default '0000-00-00 00:00:00',
+  `modifieddate` timestamp default now() on update now(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -119,10 +119,13 @@ CREATE TABLE IF NOT EXISTS `blog` (
 -- Table structure for table `blogtype`
 --
 
+drop TABLE if EXISTS `blogtype` ;
 CREATE TABLE IF NOT EXISTS `blogtype` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `icon` varchar(100) DEFAULT NULL,
+  `createdate` timestamp default '0000-00-00 00:00:00',
+  `modifieddate` timestamp default now() on update now(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -131,11 +134,6 @@ CREATE TABLE IF NOT EXISTS `blogtype` (
 -- Dumping data for table `blogtype`
 --
 
-INSERT INTO `blogtype` (`id`, `name`, `icon`) VALUES
-(1, 'Sticky', NULL),
-(2, 'Video', NULL),
-(3, 'Quick Start', NULL),
-(4, 'Tutorial', NULL);
 
 
 -- --------------------------------------------------------
@@ -144,6 +142,7 @@ INSERT INTO `blogtype` (`id`, `name`, `icon`) VALUES
 -- Table structure for table `userresponse`
 --
 
+drop TABLE IF  EXISTS `userresponse` ;
 CREATE TABLE IF NOT EXISTS `userresponse` (
   `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `response` text NOT NULL,
@@ -151,6 +150,8 @@ CREATE TABLE IF NOT EXISTS `userresponse` (
   `email` varchar(256) NOT NULL,
   `responsedate` datetime DEFAULT NULL,
   `isok` char(0) DEFAULT NULL,
+  `createdate` timestamp default '0000-00-00 00:00:00',
+  `modifieddate` timestamp default now() on update now(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -160,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `userresponse` (
 -- Table structure for table `blog_map_category`
 --
 
+drop TABLE IF  EXISTS `blog_map_blogcategory` ;
 CREATE TABLE IF NOT EXISTS `blog_map_blogcategory` (
   `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `blogid` smallint unsigned NOT NULL,
@@ -175,6 +177,7 @@ CREATE TABLE IF NOT EXISTS `blog_map_blogcategory` (
 -- Table structure for table `blog_map_blogtype`
 --
 
+drop TABLE IF  EXISTS `blog_map_blogtype` ;
 CREATE TABLE IF NOT EXISTS `blog_map_blogtype` (
   `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `blogid` smallint unsigned NOT NULL,
@@ -192,6 +195,7 @@ CREATE TABLE IF NOT EXISTS `blog_map_blogtype` (
 -- Table structure for table `blog_map_userresponse`
 --
 
+drop TABLE IF EXISTS `blog_map_userresponse` ;
 CREATE TABLE IF NOT EXISTS `blog_map_userresponse` (
   `id` smallint unsigned NOT NULL AUTO_INCREMENT,
   `blogid` smallint unsigned NOT NULL,
@@ -201,6 +205,25 @@ CREATE TABLE IF NOT EXISTS `blog_map_userresponse` (
   foreign KEY (`userresponseid`) references userresponse (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+
+INSERT INTO `blogcategory` (`id`, `name`, `description`, `color`, `postfolder`, `url`, `title`, `backgroundtitle`, `backgroundtitlecolor`, `carouseltitle`, `carouselsubtitle`) VALUES
+(1, 'Regex', 'Regular Expressions', '#e40177', '../../blogs/regex/', 'http://barraud-w7-1/peterbarraud/blogs/regex/', 'Regular Expressions', 'Regular Expressions', '#5a5a5a', 'Regular Expressions', 'Scripting will never be done without Regular Expressions. We''ll cover examples using Perl (the top of the class), we''ll also use FrameMaker''s own Regular Expression search and replace with examples.'),
+(2, 'ExtendScript', 'ExtendScript for FrameMaker', '#9f5700', '../../blogs/estk/', 'http://barraud-w7-1/peterbarraud/blogs/estk/', 'ExtendScript for FrameMaker', 'ExtendScript for FrameMaker', '#5a5a5a', 'ExtendScript for FrameMaker', 'Automate a whole lot of what you do in FrameMaker. The blog covers all sorts of examples (including the source and executables). Look and learn from the source. Or simply use the executables.'),
+(3, 'Perl', 'Scripting in Perl', '#004065', '../../blogs/perl/', 'http://barraud-w7-1/peterbarraud/blogs/perl/', 'Scripting in Perl', 'Scripting in Perl', '#5a5a5a', 'Scripting in Perl', 'Though you do loads of stuff with Perl. In my blog, I''m going to talk mostly about doing stuff with text. We''ll do stuff like reading from a file, or maybe even updating the contents of a file.'),
+(4, 'FrameMaker', 'Adobe FrameMaker', '#9f5700', '../../blogs/fm/', 'http://barraud-w7-1/peterbarraud/blogs/fm/', 'Authoring in FrameMaker', 'Authoring in FrameMaker', '#5a5a5a', 'Authoring in FrameMaker', 'So FrameMaker is what author in and author for at Adobe. And that''s what we''re going to do here. I''ll try to add videos to show you how to get started with some things like say Structure author or DITA');
+
+INSERT INTO `appconfig` (`id`, `templatefolder`, `posttemplatename`, `postfolder`, `posturl`, `categorytemplatename`, `indextemplatename`, `indexfolder`, `indexfilename`, `lightcarousel`, `darkcarousel`) VALUES
+(1, '../templates/', 'blog_post.html', '../../blogs/blogs/', 'http://barraud-w7-1/peterbarraud/blogs/blogs/', 'category_index.html', 'peterbarraud_index.html', '../../', 'index.html', 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTAwIj48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzY2NiI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQ1MCIgeT0iMjUwIiBzdHlsZT0iZmlsbDojNmE2YTZhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjU2cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+U2Vjb25kIHNsaWRlPC90ZXh0Pjwvc3ZnPg==', 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTAwIj48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzU1NSI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQ1MCIgeT0iMjUwIiBzdHlsZT0iZmlsbDojNWE1YTVhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjU2cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+VGhpcmQgc2xpZGU8L3RleHQ+PC9zdmc+');
+
+INSERT INTO `blogtype` (`id`, `name`, `icon`) VALUES
+(1, 'Sticky', NULL),
+(2, 'Video', NULL),
+(3, 'Quick Start', NULL),
+(4, 'Tutorial', NULL);
+
+insert into appuser (`username`,`password`,`createdate`,`modifieddate`) values ('gapeterb','danielb',now(),now());
+
+SET FOREIGN_KEY_CHECKS=1;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

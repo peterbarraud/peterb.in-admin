@@ -13,28 +13,13 @@
 	//we can then also (brilliant, this one) make full use of db transactions - we can do a full commit / rollback of everything that happened for the duration of the API
 	
 	
-	$app->get('/testserver/',function() {
-		$ret_val = array();
-		require_once 'dataobjectserver/application.php';
-		$app = Application::getinstance();
-		$classAttrs = array();
-		$classAttrs['password'] = 'john';
-		$user = $app->GetObjectsByClassNameAndAttributes('appuser',$classAttrs);
-		//echo $user->Length . "\n";
-		$ret_val['okso'] = $user->Length;
-		//cors();
-		//echo json_encode($ret_val);	
-	});
 	$app->get('/validateuser/:username/:password',function($username,$password) {
 		require_once 'dataobjectserver/application.php';
-		$app = Application::getinstance();
+		$application = Application::getinstance();
 		$classAttrs = array();
-		$logger = new logger();
 		$classAttrs['password'] = $password;
 		$classAttrs['username'] = $username;
-		$logger->WriteLine($password);
-		$logger->WriteLine($username);
-		$user = $app->GetObjectsByClassNameAndAttributes('appuser',$classAttrs);
+		$user = $application->GetObjectsByClassNameAndAttributes('appuser',$classAttrs);
 		$ret_val = array();
 		if ($user->Length == 1) {
 			$ret_val['success'] = 1;
@@ -49,16 +34,36 @@
 	
 	$app->get('/gettypelist/',function(){
 		require_once 'dataobjectserver/application.php';
-		$app = Application::getinstance();
-		$blogtypes = $app->GetObjectsByClassName('blogtype');
+		$application = Application::getinstance();
+		$blogtypes = $application->GetObjectsByClassName('blogtype');
 		echo json_encode($blogtypes);
 	});
 	
 	$app->get('/getcategorylist/',function () {
 		require_once 'dataobjectserver/application.php';
-		$app = Application::getinstance();
-		$blogcategories = $app->GetObjectsByClassName('blogcategory');
+		$application = Application::getinstance();
+		$blogcategories = $application->GetObjectsByClassName('blogcategory');
 		echo json_encode($blogcategories);
+	});
+	
+	$app->get('/getpost/:postid',function($postid) {
+		require_once 'dataobjectserver/application.php';
+		$application = Application::getinstance();
+		$blog = $application->GetObjectById('blog',$postid,1);
+		echo json_encode($blog);
+	});
+	$app->post('/savepost',function() use ($app) {
+		require_once 'dataobjectserver/application.php';		
+		$application = Application::getinstance();
+		//cast the json object to a well formed php object based on the data object model
+		$blogObject = $application->GetObjectForJSON(json_decode($app->request->post('blogObject')),'blog');
+		if (!$blogObject->id) {
+			$blogObject->createdate = 'now()';
+		}
+		$blogObject->modifieddate = 'now()';
+		$blogObject->Save();
+		$ret_val['savedblogid'] = $blogObject->id;
+		echo json_encode($ret_val);
 	});
 	
 	
@@ -89,5 +94,4 @@ function cors() {
 
     //echo "You have CORS!";
 }
-
 ?>
