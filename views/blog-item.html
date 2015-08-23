@@ -3,7 +3,7 @@
     <button ng-click="new()" type="button" class="btn btn-default">New</button>
     <button ng-click="save()" ng-disabled="!BlogIsDirty" type="button" class="btn btn-default">Save</button>
     <button ng-click="cancel()" ng-disabled="!BlogIsDirty" type="button" class="btn btn-default">Cancel</button>
-    <button ng-click="publish()" type="button" class="btn btn-default">Publish</button>
+    <button ng-click="publish()" ng-disabled="!canPublish()" type="button" class="btn btn-default">Publish</button>
     </div>
     <div ng-class="getresponsemessagetype()" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

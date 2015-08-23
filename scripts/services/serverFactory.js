@@ -59,18 +59,18 @@ angular.module('peterbdotin')
       },
       
       getallblogs : function(scope) {
-		  /*
-        $http.get('services/pbrest.php/getallposts').
+		  console.log(scope);
+        $http.get('services/in.peterb.restapi.php/getallblogs/').
           success(function(data, status, headers, config) {
-            scope.bloglist = data;
-            scope.setSelectedBlogId(scope.bloglist[0].ID); 
+			  console.log(data.Items[0].title);
+            scope.bloglist = data.Items;
+            //console.log(data.Items[0].name);
           }).
           error(function(data, status, headers, config) {
             console.log(data);
             // called asynchronously if an error occurs
             // or server returns response with an error status.
           });        
-          * */
       },
       
       getcategorylist : function(scope) {

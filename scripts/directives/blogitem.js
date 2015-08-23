@@ -60,6 +60,19 @@ angular.module('peterbdotin')
           scope.checkListIem = function (listItemID) {
             scope.BlogIsDirty = true;
           }
+          scope.canPublish = function () {
+			  var ret_val = true;
+			  if (angular.isDefined(scope.blogDetails)) {
+				  if (scope.blogDetails.subtitle == null && scope.blogDetails.blog == null) {
+					  ret_val = false;
+				  }
+			  }
+			  else {
+				  ret_val = false;
+			  }
+			  
+			  return ret_val;
+		  }
           scope.save = function() {
             if (!util.isEmptyString(scope.blogDetails.title)) { //you'll need at least a title to save a blog
               //CATEGORIES

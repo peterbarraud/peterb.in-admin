@@ -45,6 +45,12 @@
 		$blogcategories = $application->GetObjectsByClassName('blogcategory');
 		echo json_encode($blogcategories);
 	});
+	$app->get('/getallblogs/',function(){
+		require_once 'dataobjectserver/application.php';
+		$application = Application::getinstance();
+		$blogs = $application->GetObjectsByClassName('blog');
+		echo json_encode($blogs);
+	});
 	
 	$app->get('/getpost/:postid',function($postid) {
 		require_once 'dataobjectserver/application.php';
