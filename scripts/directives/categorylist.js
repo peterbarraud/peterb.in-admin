@@ -7,9 +7,9 @@
  * # eventPod
  */
 angular.module('peterbdotin')
-  .directive('blogList', function (util,serverFactory,$location) {
+  .directive('categoryList', function (util,serverFactory,$location) {
     return {
-      templateUrl: 'views/blog-list.html',
+      templateUrl: 'views/category-list.html',
       restrict: 'E',
       replace:true,
       link: function postLink(scope,element, attrs) {
@@ -18,7 +18,9 @@ angular.module('peterbdotin')
             if (currentItemID === scope.selectedItemId)
               return "active";
           }
-                  
+          scope.refreshList = function () {
+            //serverFactory.getallblogs(scope);
+          }
         }
     };
   });

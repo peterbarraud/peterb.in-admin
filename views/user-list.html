@@ -1,0 +1,12 @@
+  <div class=col-md-3>
+    <div class="panel panel-default" style="overflow: auto;height:700px">
+      <div class="panel-heading">History <button class="btn btn-primary btn-xs" ng-click="refreshList()" type="submit">Refresh</button></div>
+      <div class="panel-body">
+        <div class="list-group">
+          <a ng-click='setSelectedBlogId(blog.id)' ng-repeat="blog in bloglist" 
+			ng-class="setActiveBlogItem(blog.id)" class='list-group-item' style="cursor:default;font-size:12px;">{{blog.title}}</a>
+        </div>        
+      </div>
+    </div>
+  </div>
+

@@ -1,8 +1,8 @@
 <div class=col-md-9>
   <div class="btn-group" role="group" aria-label="...">
     <button ng-click="new()" type="button" class="btn btn-default">New</button>
-    <button ng-click="save()" ng-disabled="!ItemIsDirty" type="button" class="btn btn-default">Save</button>
-    <button ng-click="cancel()" ng-disabled="!ItemIsDirty" type="button" class="btn btn-default">Cancel</button>
+    <button ng-click="save()" ng-disabled="!BlogIsDirty" type="button" class="btn btn-default">Save</button>
+    <button ng-click="cancel()" ng-disabled="!BlogIsDirty" type="button" class="btn btn-default">Cancel</button>
     <button ng-click="publish()" ng-disabled="!canPublish()" type="button" class="btn btn-default">Publish</button>
     </div>
     <div ng-class="getresponsemessagetype()" role="alert">
@@ -13,11 +13,11 @@
     <form name="frm">
       <div class="form-group">
         <label for="Title">Title</label>
-        <input type="text" ng-model='itemDetails.title' class="form-control" id="Title" placeholder="Blog title">
+        <input type="text" ng-model='blogDetails.title' class="form-control" id="Title" placeholder="Blog title">
       </div>
       <div class="form-group">
         <label for="subtitle">Sub-title</label>
-        <textarea class="form-control" rows="3" placeholder='Sub title' id='subtitle' ng-model='itemDetails.subtitle'></textarea>
+        <textarea class="form-control" rows="3" placeholder='Sub title' id='subtitle' ng-model='blogDetails.subtitle'></textarea>
       </div>
       <div class="form-group">
         <div class=row>
@@ -25,7 +25,7 @@
             <label for="editor">Blog</label>
             <div ng-cloak ng-hide="ckeditorIsReady" class="highlight">Initialising ...</div>
             <div>
-              <textarea ckeditor="editorOptions" name="editor" ng-model="itemDetails.blog"></textarea>
+              <textarea ckeditor="editorOptions" name="editor" ng-model="blogDetails.blog"></textarea>
             </div>
           </div>
           <div class=col-md-3>

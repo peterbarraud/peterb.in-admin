@@ -20,28 +20,31 @@ angular.module('peterbdotin')
               toolbarLocation: 'bottom',
               enterMode:CKEDITOR.ENTER_BR,
           };
-          scope.$on("ckeditor.ready", function( event ) {scope.ckeditorIsReady = true;});            
+          scope.$on("ckeditor.ready", function( event ) {scope.ckeditorIsReady = true;});
           
           
-          if (scope.$parent.validUser === false)  { //route back to the login page
+          if (!scope.$parent.validUser === true)  { //route back to the login page
             $location.path( "/" );
           }
           
 
           scope.cancel = function () {
-            //TODO - this should revert any changes. Right now it doesn't
-            scope.ServerResponse.Type = null;
-            scope.BlogIsDirty = false;
-            scope.showdirtyalert = false;
-            scope.blogDetails = angular.copy(scope.blogDetails_Backup);
-            //serverFactory.getblogdetails(scope.selectedBlogId,scope);
+            //scope.itemDetails = angular.copy(scope.itemDetailsLastKnwonGood);
+            scope.itemDetails.title = scope.itemDetailsLastKnwonGood.title;
+            scope.itemDetails.subtitle = scope.itemDetailsLastKnwonGood.sutitle;
+            scope.itemDetails.blog = scope.itemDetailsLastKnwonGood.blog;
+            //TODO: handle if user changes categories and types and cancels
+            
+			scope.ItemIsDirty = false;
+			scope.showdirtyalert = false;
+			scope.frm.editor.$setPristine();
           }
           scope.new = function () {
             scope.ServerResponse.Type = null;
-            scope.setSelectedBlogId(-1);
+            scope.setSelectedItemId(-1);
             scope.selectedCategories = {ids: {}};
             scope.selectedTypes = {ids: {}};
-            scope.BlogIsDirty = false;
+            scope.ItemIsDirty = false;
           }
           //to hide the message, set the type to null
           scope.getresponsemessagetype = function() {
@@ -58,12 +61,12 @@ angular.module('peterbdotin')
 
           }
           scope.checkListIem = function (listItemID) {
-            scope.BlogIsDirty = true;
+            scope.ItemIsDirty = true;
           }
           scope.canPublish = function () {
 			  var ret_val = true;
-			  if (angular.isDefined(scope.blogDetails)) {
-				  if (scope.blogDetails.subtitle == null && scope.blogDetails.blog == null) {
+			  if (angular.isDefined(scope.itemDetails)) {
+				  if (scope.itemDetails.subtitle == null && scope.itemDetails.blog == null) {
 					  ret_val = false;
 				  }
 			  }
@@ -73,35 +76,75 @@ angular.module('peterbdotin')
 			  
 			  return ret_val;
 		  }
+		  scope.manageitem = function (data) {
+			scope.itemDetails = data;
+			if (scope.itemDetails.id === 0) {
+			  scope.itemDetails.blog = "<p></p>";
+			}
+			//SELECTED CATEGORIES
+			//now lets add the blog categories to the selected categories object array
+			scope.selectedCategories = {ids: {}}; //clear out the current selected categories
+			scope.itemDetails.blogcategory.forEach (function(category) {
+			  scope.selectedCategories.ids[category.id] = true;
+			});
+			//SELECTED TYPES
+			//now lets add the blog types to the selected types object array
+			scope.selectedTypes = {ids: {}}; //clear out the current selected categories
+			scope.itemDetails.blogtype.forEach (function(blogType) {
+			  scope.selectedTypes.ids[blogType.id] = true;
+			});
+			//finally put the blog details into the last known good object
+			//we will use this to check for changes (not for dirty changes)
+			//1. to check if the client changed the title (if yes, then refresh the item list)
+			//2. to execute the cancel command. we will bring back the last known good
+			scope.itemDetailsLastKnwonGood = angular.copy(scope.itemDetails);
+		  }
+		  
+		  scope.managesaveitem = function (data) {
+			scope.ItemIsDirty = false;
+			scope.showdirtyalert = false;
+			scope.frm.editor.$setPristine();
+			//refresh the item list
+			//scope.itemDetails
+			//data.saveditem;
+			//in the blog list, we will only show the title. so refresh this list only if the title is changed
+			if (scope.itemDetails.title !== scope.itemDetailsLastKnwonGood.title) {
+				serverFactory.getblogitems(scope,'manageblogitems');
+			}
+			scope.itemDetailsLastKnwonGood = angular.copy(scope.itemDetails);
+		  }
+		  
+		  
+		  
           scope.save = function() {
-            if (!util.isEmptyString(scope.blogDetails.title)) { //you'll need at least a title to save a blog
+            if (!util.isEmptyString(scope.itemDetails.title)) { //you'll need at least a title to save a blog
               //CATEGORIES
               //clear the current blog categories list
-              scope.blogDetails.blogcategory = [];
-              //iterate the list of selected categories and add them to the blogDetails object category array
+              scope.itemDetails.blogcategory = [];
+              //iterate the list of selected categories and add them to the itemDetails object category array
               angular.forEach (scope.selectedCategories.ids, function(isaddcategory,selectedCategoryID){
                 if (isaddcategory) {
                   scope.categoryList.forEach (function (category) {
                     if (category.id === selectedCategoryID) {
-                      scope.blogDetails.blogcategory.push(category);
+                      scope.itemDetails.blogcategory.push(category);
                     }
                   });
                 }
               });
               //TYPES
               //clear the current blog type list
-              scope.blogDetails.blogtype = [];
-              //iterate the list of selected categories and add them to the blogDetails object blogtype array
+              scope.itemDetails.blogtype = [];
+              //iterate the list of selected categories and add them to the itemDetails object blogtype array
               angular.forEach (scope.selectedTypes.ids, function(isaddtype,selectedTypeID){
                 if (isaddtype) {
                   scope.typeList.forEach (function (blogType) {
                     if (blogType.id === selectedTypeID) {
-                      scope.blogDetails.blogtype.push(blogType);
+                      scope.itemDetails.blogtype.push(blogType);
                     }
                   });
                 }
               });
-              serverFactory.saveblogdetails(scope);
+              serverFactory.saveitemdetails(scope,'blog');
             }
             else {
               alert("The blog will at least need a title for me to save it.")
@@ -113,21 +156,21 @@ angular.module('peterbdotin')
           //this is useful in two obvious cases:
           //1. to enable the save button
           //2. to throw a warning if a user tries to navigate out of this screen
-          scope.$watch('blogDetails',function (new_blogDetails,old_blogDetails){
+          scope.$watch('itemDetails',function (new_itemDetails,old_itemDetails){
               //we are checking for a dirty blog
               //so only test the watcher as long as the id has not changed
             if (scope.ckeditorIsReady) {
-              if (!angular.isUndefined(old_blogDetails) && !angular.isUndefined(new_blogDetails)) {
-                if (!angular.isUndefined(old_blogDetails.id) && !angular.isUndefined(new_blogDetails.id)) {
-                  if (old_blogDetails.id === new_blogDetails.id) {  //means we havent changed the blog being view but something else has changed
+              if (!angular.isUndefined(old_itemDetails) && !angular.isUndefined(new_itemDetails)) {
+                if (!angular.isUndefined(old_itemDetails.id) && !angular.isUndefined(new_itemDetails.id)) {
+                  if (old_itemDetails.id === new_itemDetails.id) {  //means we havent changed the blog being viewed but something else has changed
                     if (scope.frm.editor.$dirty) {
-                      scope.BlogIsDirty = true;
+                      scope.ItemIsDirty = true;
                     }
-                    else if (old_blogDetails.title !== new_blogDetails.title) {
-                      scope.BlogIsDirty = true;
+                    else if (old_itemDetails.title !== new_itemDetails.title) {
+                      scope.ItemIsDirty = true;
                     }
-                    else if (old_blogDetails.subtitle !== new_blogDetails.subtitle) {
-                      scope.BlogIsDirty = true;
+                    else if (old_itemDetails.subtitle !== new_itemDetails.subtitle) {
+                      scope.ItemIsDirty = true;
                     }
                   }
                 }
@@ -136,10 +179,10 @@ angular.module('peterbdotin')
           },true);  //true arg is used to watch objects
           
 
-        scope.$watch('selectedBlogId',function (new_selectedBlogId,old_selectedBlogId){
+        scope.$watch('selectedItemId',function (new_selectedItemId,old_selectedItemId){
             //dont get here on load. is there a better way of stopping a watch on load?
-            if (new_selectedBlogId !== 0) {
-              serverFactory.getblogdetails(new_selectedBlogId,scope);
+            if (new_selectedItemId !== 0) {
+              serverFactory.getitem(new_selectedItemId,'blog',scope);
             }
           });
         }

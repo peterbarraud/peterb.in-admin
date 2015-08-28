@@ -7,18 +7,20 @@
  * # eventPod
  */
 angular.module('peterbdotin')
-  .directive('blogList', function (util,serverFactory,$location) {
+  .directive('itemList', function (util,serverFactory,$location) {
     return {
-      templateUrl: 'views/blog-list.html',
+      templateUrl: 'views/item-list.html',
       restrict: 'E',
       replace:true,
       link: function postLink(scope,element, attrs) {
-          scope.setActiveItem = function(currentItemID) {
+          scope.setActiveBlogItem = function(currentBlogID) {
             //scope.ServerResponse.Type = null;
-            if (currentItemID === scope.selectedItemId)
+            if (currentBlogID === scope.selectedBlogId)
               return "active";
           }
-                  
+          scope.refreshList = function () {
+            serverFactory.getallblogs(scope);
+          }
         }
     };
   });

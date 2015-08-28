@@ -19,7 +19,7 @@ angular.module('peterbdotin')
           success(function(data, status, headers, config) {
 			  if (data.success) {
 				  scope.$parent.validUser = true;
-				  location.path( "/blogitem" );
+				  location.path( "/blogadmin" );
 			  }
 			  else {
 				  scope.$parent.validUser = false;
@@ -30,75 +30,63 @@ angular.module('peterbdotin')
 			  scope.invalid_user_cred = data.error;
           });        
       },
-      getblogdetails : function(blogId,scope) {
-        $http.get('services/in.peterb.restapi.php/getpost/' + blogId).
+      //we are going to use scope callbacks to handle multiple directive calls to identical factory methods
+      //the specific directive functionality should be handled in the directive itselt. not in the factory. (mostly thanks to Ed Seckler)
+      getitem : function(itemid,itemtype,scope) {
+        $http.get('services/in.peterb.restapi.php/getitem/' + itemtype + '/' + itemid).
           success(function(data, status, headers, config) {
-			scope.blogDetails = data;
-			console.log(scope.blogDetails);
-			//now a HACK to manage ckeditor
-			//default the blog to a p tag if id = 0 (new blog)
-			if (scope.blogDetails.id === 0) {
-			  scope.blogDetails.blog = "<p></p>";
-			}
-			//SELECTED CATEGORIES
-			//now lets add the blog categories to the selected categories object array
-			scope.selectedCategories = {ids: {}}; //clear out the current selected categories
-			scope.blogDetails.blogcategory.forEach (function(category) {
-			  scope.selectedCategories.ids[category.id] = true;
-			});
-			//SELECTED TYPES
-			//now lets add the blog types to the selected types object array
-			scope.selectedTypes = {ids: {}}; //clear out the current selected categories
-			scope.blogDetails.blogtype.forEach (function(blogType) {
-			  scope.selectedTypes.ids[blogType.id] = true;
-			});
+			  scope.manageitem(data);
           }).
           error(function(data, status, headers, config) {
             console.log(data);
-          });        
-      },
-      
-      getallblogs : function(scope) {
-		  console.log(scope);
-        $http.get('services/in.peterb.restapi.php/getallblogs/').
-          success(function(data, status, headers, config) {
-			  console.log(data.Items[0].title);
-            scope.bloglist = data.Items;
-            //console.log(data.Items[0].name);
-          }).
-          error(function(data, status, headers, config) {
-            console.log(data);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-          });        
-      },
-      
-      getcategorylist : function(scope) {
-        $http.get('services/in.peterb.restapi.php/gettypelist/').
-          success(function(data, status, headers, config) {
-            scope.typeList = data.Items;
-            //console.log(data.Items[0].name);
-          }).
-          error(function(data, status, headers, config) {
-            console.log(data);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
           });        
       },
 
-      gettypelist : function(scope) {
-        $http.get('services/in.peterb.restapi.php/getcategorylist/').
+      getitems : function(itemtype,scope,callback) {
+        $http.get('services/in.peterb.restapi.php/getitems/' + itemtype).
           success(function(data, status, headers, config) {
-            scope.categoryList = data.Items;
-            //console.log(data.Items[0].name);
+			  var dyn_functions = [];
+			  scope[callback](data);
           }).
           error(function(data, status, headers, config) {
             console.log(data);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
+          });        
+      },
+      getblogitems : function(scope,callback) {
+        $http.get('services/in.peterb.restapi.php/getblogitems').
+          success(function(data, status, headers, config) {
+			  scope[callback](data);
+          }).
+          error(function(data, status, headers, config) {
+            console.log(data);
           });        
       },
       
+      
+
+      saveitemdetails : function(scope,itemtype) {
+        var paramsObject = {itemObject:JSON.stringify(scope.itemDetails)};
+        var httpPostParams = [];
+        for (var key in paramsObject) {
+          httpPostParams.push(key + '=' + encodeURIComponent(paramsObject[key]));
+        }
+        httpPostParams = httpPostParams.join('&');
+        $http({
+          method: 'POST',
+          url: 'services/in.peterb.restapi.php/saveitem/' + itemtype,
+          data: httpPostParams,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).
+        success(function(data, status, headers, config) {
+			scope.managesaveitem (data);
+        }).
+        error(function(data, status, headers, config) {
+          console.log(data);
+        });
+        //util.httpPost(paramsObject,$http,);
+      },
+
+
       publishblog : function (scope) {
         $http.get('services/testrest.php/testserver/').
           success(function(data, status, headers, config) {
@@ -111,36 +99,6 @@ angular.module('peterbdotin')
           });        
       },
       
-      saveblogdetails : function(scope) {
-        var paramsObject = {blogObject:JSON.stringify(scope.blogDetails)};
-        var httpPostParams = [];
-        for (var key in paramsObject) {
-          httpPostParams.push(key + '=' + encodeURIComponent(paramsObject[key]));
-        }
-        httpPostParams = httpPostParams.join('&');
-        $http({
-          method: 'POST',
-          url: 'services/in.peterb.restapi.php/savepost',
-          data: httpPostParams,
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).
-        success(function(data, status, headers, config) {
-			console.log(data.savedblogid);
-			
-          //if all is good, then let's clean up
-          scope.BlogIsDirty = false;
-          scope.showdirtyalert = false;
-          //scope.mode = 'readonly';
-          scope.setSelectedBlogId(data.savedblogid); 
-          //TODO:
-          //and then refresh the blog list with the new / updated blog
-          //this.getallblogs();
-        }).
-        error(function(data, status, headers, config) {
-          console.log(data);
-        });
-        //util.httpPost(paramsObject,$http,);
-      },
     };        
         
         

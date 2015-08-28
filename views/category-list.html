@@ -1,9 +1,9 @@
   <div class=col-md-3>
     <div class="panel panel-default" style="overflow: auto;height:700px">
-      <div class="panel-heading">History</div>
+      <div class="panel-heading">History <button class="btn btn-primary btn-xs" ng-click="refreshList()" type="submit">Refresh</button></div>
       <div class="panel-body">
         <div class="list-group">
-          <a ng-click='setSelectedItemId(item.id)' ng-repeat="item in itemlist" 
+          <a ng-click='setSelectedItemId(item.id)' ng-repeat="item in categoryList" 
 			ng-class="setActiveItem(item.id)" class='list-group-item' style="cursor:default;font-size:12px;">{{item.title}}</a>
         </div>        
       </div>

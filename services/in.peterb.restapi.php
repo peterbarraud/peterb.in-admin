@@ -32,43 +32,38 @@
 		echo json_encode($ret_val);
 	});
 	
-	$app->get('/gettypelist/',function(){
+	$app->get('/getitems/:itemtype',function($itemtype) {
 		require_once 'dataobjectserver/application.php';
 		$application = Application::getinstance();
-		$blogtypes = $application->GetObjectsByClassName('blogtype');
-		echo json_encode($blogtypes);
+		$items = $application->GetObjectsByClassName($itemtype);
+		echo json_encode($items);
 	});
-	
-	$app->get('/getcategorylist/',function () {
+	//we're creating a specific method, because we want the blog list to be sorted by modified date - descending
+	$app->get('/getblogitems',function() {
 		require_once 'dataobjectserver/application.php';
 		$application = Application::getinstance();
-		$blogcategories = $application->GetObjectsByClassName('blogcategory');
-		echo json_encode($blogcategories);
+		$sortby = array();
+		$sortby['modifieddate'] = 'desc';
+		$items = $application->GetObjectsByClassName('blog',$sortby);
+		echo json_encode($items);
 	});
-	$app->get('/getallblogs/',function(){
+	$app->get('/getitem/:itemtype/:itemid',function($itemtype,$itemid) {
 		require_once 'dataobjectserver/application.php';
 		$application = Application::getinstance();
-		$blogs = $application->GetObjectsByClassName('blog');
-		echo json_encode($blogs);
-	});
-	
-	$app->get('/getpost/:postid',function($postid) {
-		require_once 'dataobjectserver/application.php';
-		$application = Application::getinstance();
-		$blog = $application->GetObjectById('blog',$postid,1);
+		$blog = $application->GetObjectById($itemtype,$itemid,1);
 		echo json_encode($blog);
 	});
-	$app->post('/savepost',function() use ($app) {
+	$app->post('/saveitem/:itemtype',function($itemtype) use ($app) {
 		require_once 'dataobjectserver/application.php';		
 		$application = Application::getinstance();
 		//cast the json object to a well formed php object based on the data object model
-		$blogObject = $application->GetObjectForJSON(json_decode($app->request->post('blogObject')),'blog');
-		if (!$blogObject->id) {
-			$blogObject->createdate = 'now()';
+		$itemObject = $application->GetObjectForJSON(json_decode($app->request->post('itemObject')),$itemtype);
+		if (!$itemObject->id) {
+			$itemObject->createdate = 'now()';
 		}
-		$blogObject->modifieddate = 'now()';
-		$blogObject->Save();
-		$ret_val['savedblogid'] = $blogObject->id;
+		$itemObject->modifieddate = 'now()';
+		$itemObject->Save();
+		$ret_val['saveditem'] = $itemObject;
 		echo json_encode($ret_val);
 	});
 	

@@ -13,7 +13,6 @@ angular.module('peterbdotin')
       restrict: 'E',
       replace:true,
       link: function postLink(scope,element, attrs) {
-        scope.$parent.validUser = false;
         scope.checkusercredentials = function () {
           serverFactory.checkusercredentials(scope,$location);
         }
